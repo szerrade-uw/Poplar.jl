@@ -25,13 +25,22 @@
          .1
     end ~ preserve(parameter)
 
-    percent_NSC => begin
-	.3
+    fraction_NSC => begin
+	.1
     end ~ preserve(parameter)
 
-    non_structural_carbon(WR,percent_NSC) => begin
-        percent_NSC*WR
+    #Non-structural carbon available when shooting begins
+    shooting_capacity(fraction_NSC,WR) => begin 
+	fraction_NSC*WR
     end ~ track(u"kg/ha")
+
+    non_structural_carbon(shooting,shooting_capacity,dShoot,shooting, non_structural_carbon,dWR) => begin
+	if(shooting)
+		-dShoot
+        else(non_structural_carbon<shooting_capacity)
+                dWR
+        end
+    end ~ accumulate(u"kg/ha",min=0u"kg/ha",init=shooting_capacity,max=shooting_capacity)
 
     ShD(T_air, T_shoot, T_shoot_opt): shooting_degrees => begin
         min(T_air, T_shoot_opt) - T_shoot 
@@ -44,7 +53,7 @@
 
     # Hourly shoot growth rate.
     dShoot(shoot_rate, ShD, root_shoot_ratio,non_structural_carbon,shoot,min_RSR) => begin 
-        if(root_shoot_ratio<min_RSR || shoot>=non_structural_carbon) 
+        if(root_shoot_ratio<min_RSR || non_structural_carbon<=0u"kg/ha") 
 	   0
         else
            shoot_rate * ShD 
