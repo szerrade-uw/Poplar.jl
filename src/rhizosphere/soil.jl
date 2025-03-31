@@ -11,8 +11,10 @@
         71 377 144
         93 418 198
         184 502 321
+	88 402 169
+	
     ] ~ tabulate(
-        rows=(:N, :S, :SL, :CL),
+        rows=(:N, :S, :SL, :CL, :LS),
         columns=(:wilting_point,:saturation,:field_capacity),
         parameter
     )
