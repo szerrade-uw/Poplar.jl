@@ -138,8 +138,8 @@ Transpiration
     SLs => 0.486 ~ preserve(parameter) # Slit Loam - Saturated volumetric water content
     SLr => 0.05 ~ preserve(parameter) # Slit Loam - Residual volumetric water content
 
-    VWC(ASW, soil_depth) => begin
-        ASW / soil_depth
+    VWC(SW, soil_depth) => begin
+        SW / soil_depth
     end ~ track(max = SLs)
 
     "Calculate related water content"
